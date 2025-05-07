@@ -7,21 +7,18 @@
 // It is designed to work with the other example rf24_client
 // Tested on Anarduino Mini http://www.anarduino.com/mini/ with RFM24W and RFM26W
 
-#include <SPI.h>
-#include <RH_RF24.h>
 
 //RH_RF24 rf24(14, 32, 27, hardware_spi); // ESP32
-RH_RF24 rf24(5, 6, 11, hardware_spi); // M4
+#include "manager.h"
+
 
 void setup() 
 {
   Serial.begin(9600);
   while (!Serial) {}
-  if (!rf24.init()) {
-    Serial.println("init failed");
-    while (1); // give up
-  }
-  Serial.println("init done");
+  initRF26();
+
+
   // Defaults after init are 434.0MHz, modulation GFSK_Rb5Fd10, power 0x10
 //  if (!rf24.setFrequency(433.0))
 //    Serial.println("setFrequency failed");
@@ -30,28 +27,5 @@ void setup()
 
 void loop()
 {
-  if (rf24.available())
-  {
-    // Should be a message for us now   
-    uint8_t buf[RH_RF24_MAX_MESSAGE_LEN];
-    uint8_t len = sizeof(buf);
-    if (rf24.recv(buf, &len))
-    {
-//      RF24::printBuffer("request: ", buf, len);
-      Serial.print("got request: ");
-      Serial.println((char*)buf);
-//      Serial.print("RSSI: ");
-//      Serial.println((uint8_t)rf24.lastRssi(), DEC);
-      
-      // Send a reply
-      uint8_t data[] = "And hello back to you";
-      rf24.send(data, sizeof(data));
-      rf24.waitPacketSent();
-      Serial.println("Sent a reply");
-    }
-    else
-    {
-      Serial.println("recv failed");
-    }
-  }
+  recLoop();
 }

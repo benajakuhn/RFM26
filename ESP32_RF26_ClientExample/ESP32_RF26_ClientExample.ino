@@ -12,6 +12,7 @@
 
 // Singleton instance of the radio driver
 RH_RF24 rf24(5,6,11, hardware_spi);
+uint8_t syncWords[] = {0x40, 0x5E, 0x77, 0xFA};
 
 void setup() 
 {
@@ -24,6 +25,11 @@ void setup()
     while(1); // give up
   }
 
+  /*if(!rf24.setFrequency(868.0)){
+    Serial.write("frequency swap failed");
+  }*/
+
+  rf24.setSyncWords(syncWords, sizeof(syncWords));
 
   Serial.println("init done");
   // Defaults after init are 434.0MHz, modulation GFSK_Rb5Fd10, power 0x10
