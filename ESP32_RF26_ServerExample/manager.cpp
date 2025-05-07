@@ -11,8 +11,23 @@ void initRF26(){
     Serial.println("frequency swap failed");
   }*/
   rf24.setSyncWords(syncWords, sizeof(syncWords));
-
   Serial.println("init done");
+
+
+  uint8_t partInfo_reply[8];
+  Serial.println("Sending PART_INFO command...");
+  if (rf24.command(RH_RF24_CMD_PART_INFO, NULL, 0, partInfo_reply, sizeof(partInfo_reply))) {
+    Serial.println("PART_INFO command successful. Reply:");
+    // Print the received bytes
+    for (uint8_t i = 0; i < sizeof(partInfo_reply); i++) {
+      Serial.print(partInfo_reply[i], HEX);
+      Serial.print(" ");
+    }
+    Serial.println();
+  } else {
+    Serial.println("PART_INFO command failed.");
+  }
+
 }
 
 void recLoop(){
