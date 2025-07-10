@@ -7,10 +7,13 @@ void initRF26(){
   if(!rf24.init()){
     Serial.println("init failed");
   }
+  
   /*if(!rf24.setFrequency(868.0)){
     Serial.println("frequency swap failed");
   }*/
+
   rf24.setSyncWords(syncWords, sizeof(syncWords));
+  rf24.setCRCPolynomial(RH_RF24::CRC_CCITT);
   Serial.println("init done");
 
 

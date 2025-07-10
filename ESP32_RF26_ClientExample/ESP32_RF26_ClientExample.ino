@@ -30,6 +30,7 @@ void setup()
   }*/
 
   rf24.setSyncWords(syncWords, sizeof(syncWords));
+  rf24.setCRCPolynomial(RH_RF24::CRC_CCITT);
 
   Serial.println("init done");
 
@@ -55,7 +56,6 @@ void setup()
 
 void loop()
 {
-  while(1){} // just chill
   rf24.available();
   Serial.println("Sending to rf24_server");
   // Send a message to rf24_server
